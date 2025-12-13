@@ -2,6 +2,7 @@ import { Component, signal } from '@angular/core';
 import { CitySearch } from '../city-search/city-search';
 import { CityWeatherPage } from '../city-weather-page/city-weather-page';
 import { CityWeather } from '../../models/city-weather-interface';
+import { searchCityWeather } from '../../services/search-store';
 
 @Component({
     selector: 'app-main-page',
@@ -11,4 +12,10 @@ import { CityWeather } from '../../models/city-weather-interface';
 })
 export class MainPage {
     readonly cityWeather = signal<CityWeather | undefined>(undefined);
+
+    async onSearch(query: string) {
+        console.log('Searching for:', query);
+        const data = await searchCityWeather(query);
+        console.log('Data:', data);
+    }
 }
