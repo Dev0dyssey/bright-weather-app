@@ -1,0 +1,9 @@
+<mat-form-field class="example-form-field">
+    <mat-label>Search city weather</mat-label>
+    <input matInput type="text" [formControl]="searchControl">
+    @if (searchQuery()) {
+    <button matSuffix matIconButton aria-label="Clear" (click)="onClear()">
+        <mat-icon>close</mat-icon>
+    </button>
+    }
+</mat-form-field>
