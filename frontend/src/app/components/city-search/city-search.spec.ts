@@ -23,11 +23,10 @@ describe('CitySearch', () => {
   });
 
   it('should initialize with empty search query', () => {
-    expect(component['searchQuery']()).toBe('');
     expect(component['searchControl'].value).toBe('');
   });
 
-  it('should update searchQuery signal when input value changes', (done) => {
+  it('should update searchControl when input value changes', (done) => {
     const input = fixture.nativeElement.querySelector('input');
     input.value = 'London';
     input.dispatchEvent(new Event('input'));
@@ -35,7 +34,7 @@ describe('CitySearch', () => {
 
     setTimeout(() => {
       fixture.detectChanges();
-      expect(component['searchQuery']()).toBe('London');
+      expect(component['searchControl'].value).toBe('London');
       done();
     }, 350); // Wait slightly longer than debounce (300ms)
   });
@@ -116,26 +115,24 @@ describe('CitySearch', () => {
     }, 350);
   });
 
-  it('should clear search query and control when onClear is called', () => {
+  it('should clear search control when onClear is called', () => {
     component['searchControl'].setValue('Tokyo');
-    component['searchQuery'].set('Tokyo');
 
     component.onClear();
 
     expect(component['searchControl'].value).toBe('');
-    expect(component['searchQuery']()).toBe('');
   });
 
-  it('should render clear button when searchQuery has value', () => {
-    component['searchQuery'].set('Madrid');
+  it('should render clear button when searchControl has value', () => {
+    component['searchControl'].setValue('Madrid');
     fixture.detectChanges();
 
     const clearButton = fixture.nativeElement.querySelector('button[aria-label="Clear"]');
     expect(clearButton).toBeTruthy();
   });
 
-  it('should not render clear button when searchQuery is empty', () => {
-    component['searchQuery'].set('');
+  it('should not render clear button when searchControl is empty', () => {
+    component['searchControl'].setValue('');
     fixture.detectChanges();
 
     const clearButton = fixture.nativeElement.querySelector('button[aria-label="Clear"]');
@@ -143,7 +140,7 @@ describe('CitySearch', () => {
   });
 
   it('should call onClear when clear button is clicked', () => {
-    component['searchQuery'].set('Vienna');
+    component['searchControl'].setValue('Vienna');
     fixture.detectChanges();
 
     const clearButton = fixture.nativeElement.querySelector('button[aria-label="Clear"]');

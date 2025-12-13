@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
@@ -14,7 +14,6 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 })
 export class CitySearch {
     protected readonly searchControl = new FormControl('');
-    protected readonly searchQuery = signal('');
 
     constructor() {
         this.searchControl.valueChanges.pipe(
@@ -23,7 +22,6 @@ export class CitySearch {
         )
             .subscribe(value => {
                 const query = value || '';
-                this.searchQuery.set(query);
                 if (query.trim()) {
                     this.performSearch(query);
                 }
@@ -36,7 +34,6 @@ export class CitySearch {
 
     onClear(): void {
         this.searchControl.setValue('');
-        this.searchQuery.set('');
     }
 }
 
