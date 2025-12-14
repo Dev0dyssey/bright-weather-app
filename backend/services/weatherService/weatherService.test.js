@@ -127,7 +127,8 @@ describe('weatherService', () => {
                         temp_max: 17.0
                     },
                     wind: { speed: 4.0 },  // 4.0 m/s = 8.9 mph
-                    rain: { '1h': 0.5 }
+                    rain: { '1h': 0.5 },
+                    weather: [{ main: 'Clouds', description: 'overcast clouds' }]
                 })
             });
 
@@ -143,13 +144,15 @@ describe('weatherService', () => {
                     tempMin: 13.0,
                     tempMax: 17.0,
                     windSpeedMph: 8.9,
-                    rainVolumeLastHour: 0.5
+                    rainVolumeLastHour: 0.5,
+                    condition: 'Clouds',
+                    description: 'overcast clouds'
                 }
             });
             expect(fetch).toHaveBeenCalledTimes(2);
         });
 
-        it('should handle missing rain data', async () => {
+        it('should handle missing optional data (rain, weather)', async () => {
             fetch.mockResolvedValueOnce({
                 ok: true,
                 json: async () => [{ lat: 51.5074, lon: -0.1278 }]
@@ -166,13 +169,15 @@ describe('weatherService', () => {
                         temp_max: 17.0
                     },
                     wind: { speed: 4.0 }
-                    // No rain property
+                    // No rain or weather property
                 })
             });
 
             const result = await getCityWeather('London', 'GB');
 
             expect(result.locationWeather.rainVolumeLastHour).toBeNull();
+            expect(result.locationWeather.condition).toBeNull();
+            expect(result.locationWeather.description).toBeNull();
         });
 
         it('should fail if getCoordinates fails', async () => {

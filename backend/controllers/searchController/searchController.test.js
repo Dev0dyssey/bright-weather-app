@@ -31,7 +31,9 @@ describe('searchController', () => {
                     tempMin: 13.0,
                     tempMax: 17.0,
                     windSpeedMph: 8.9,
-                    rainVolumeLastHour: 0.5
+                    rainVolumeLastHour: 0.5,
+                    condition: 'Clouds',
+                    description: 'overcast clouds'
                 }
             };
 
@@ -81,7 +83,9 @@ describe('searchController', () => {
                     tempMin: 13.0,
                     tempMax: 17.0,
                     windSpeedMph: 8.9,
-                    rainVolumeLastHour: null
+                    rainVolumeLastHour: null,
+                    condition: 'Clear',
+                    description: 'clear sky'
                 }
             };
 

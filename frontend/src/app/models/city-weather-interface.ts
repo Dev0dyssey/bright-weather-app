@@ -12,4 +12,6 @@ export interface LocationWeather {
     tempMax: number;
     windSpeedMph: number;
     rainVolumeLastHour: number | null;
+    condition: string | null;
+    description: string | null;
 }

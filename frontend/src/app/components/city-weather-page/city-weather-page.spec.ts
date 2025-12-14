@@ -39,7 +39,9 @@ describe('CityWeatherPage', () => {
         tempMin: 15,
         tempMax: 25,
         windSpeedMph: 10,
-        rainVolumeLastHour: 0
+        rainVolumeLastHour: 0,
+        condition: 'Clouds',
+        description: 'overcast clouds'
       }
     };
 
@@ -61,7 +63,9 @@ describe('CityWeatherPage', () => {
         tempMin: 15,
         tempMax: 25,
         windSpeedMph: 10,
-        rainVolumeLastHour: 0
+        rainVolumeLastHour: 0,
+        condition: 'Clouds',
+        description: 'overcast clouds'
       }
     };
 

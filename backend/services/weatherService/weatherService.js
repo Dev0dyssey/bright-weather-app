@@ -59,7 +59,9 @@ const getCityWeather = async (cityName, country = 'GB') => {
             tempMin: rawWeatherData.main.temp_min,
             tempMax: rawWeatherData.main.temp_max,
             windSpeedMph: msToMph(rawWeatherData.wind.speed),
-            rainVolumeLastHour: rawWeatherData.rain?.['1h'] ?? null
+            rainVolumeLastHour: rawWeatherData.rain?.['1h'] ?? null,
+            condition: rawWeatherData.weather?.[0]?.main ?? null,
+            description: rawWeatherData.weather?.[0]?.description ?? null
         }
     }
 };

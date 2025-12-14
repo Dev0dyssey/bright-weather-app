@@ -4,6 +4,7 @@
         <p class="error">{{ error() }}</p>
     } @else if (cityWeather()) {
         <h2>Weather details</h2>
+        <p>Current weather: {{ cityWeather()?.locationWeather?.condition }} - {{ cityWeather()?.locationWeather?.description }}</p>
         <p>Temperature: {{ cityWeather()?.locationWeather?.temp }}°C</p>
         <p>Feels like: {{ cityWeather()?.locationWeather?.feelsLike }}°C</p>
         <p>Humidity: {{ cityWeather()?.locationWeather?.humidity }}%</p>
