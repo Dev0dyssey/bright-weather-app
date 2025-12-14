@@ -4,11 +4,10 @@ import { CityWeatherResponse } from '../models/city-weather-interface';
 @Injectable({
     providedIn: 'root'
 })
-
 export class WeatherService {
     private readonly baseUrl = 'http://localhost:3000';
 
-    async searchCityWeather (cityName: string, country?: string): Promise<CityWeatherResponse> {
+    async searchCityWeather(cityName: string, country?: string): Promise<CityWeatherResponse> {
         const params = new URLSearchParams({ cityName });
         if (country) {
             params.append('country', country);

@@ -8,8 +8,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
-
-
 @Component({
     selector: 'app-city-search',
     templateUrl: './city-search.html',
@@ -26,7 +24,7 @@ export class CitySearch {
         { name: 'Australia', code: 'AU' },
         { name: 'New Zealand', code: 'NZ' },
         { name: 'South Africa', code: 'ZA' },
-    ]
+    ];
     protected readonly searchControl = new FormControl('');
     protected readonly countryControl = new FormControl('GB');
     readonly onSearch = output<{ cityName: string, country: string }>();
@@ -49,15 +47,18 @@ export class CitySearch {
                     this.onClearSearch.emit();
                 }
             });
-        this.countryControl.valueChanges.subscribe(value => {
-            const cityQuery = (this.searchControl.value || '').trim();
-            if (cityQuery) {
-                this.onSearch.emit({
-                    cityName: cityQuery,
-                    country: value || 'GB'
-                });
-            }
-        })
+        this.countryControl.valueChanges.pipe(
+            takeUntilDestroyed(this.destroyRef)
+        )
+            .subscribe(value => {
+                const cityQuery = (this.searchControl.value || '').trim();
+                if (cityQuery) {
+                    this.onSearch.emit({
+                        cityName: cityQuery,
+                        country: value || 'GB'
+                    });
+                }
+            });
     }
     onClear(): void {
         this.searchControl.setValue('');
