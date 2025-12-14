@@ -25,7 +25,7 @@ describe('CityWeatherPage', () => {
   it('should display default city name when cityWeather input is not provided', () => {
     fixture.detectChanges();
     const heading = fixture.nativeElement.querySelector('h1');
-    expect(heading?.textContent?.trim()).toBe('City Weather for Default City Name');
+    expect(heading?.textContent?.trim()).toBe('Search for a city');
   });
 
   it('should display city name when cityWeather input is provided', () => {
@@ -49,10 +49,10 @@ describe('CityWeatherPage', () => {
     fixture.detectChanges();
 
     const heading = fixture.nativeElement.querySelector('h1');
-    expect(heading?.textContent?.trim()).toBe('City Weather for London');
+    expect(heading?.textContent?.trim()).toBe('London');
   });
 
-  it('should render weather details heading when cityWeather is provided', () => {
+  it('should render weather card when cityWeather is provided', () => {
     const mockCityWeather: CityWeatherResponse = {
       cityName: 'London',
       country: 'UK',
@@ -72,8 +72,8 @@ describe('CityWeatherPage', () => {
     fixture.componentRef.setInput('cityWeather', mockCityWeather);
     fixture.detectChanges();
 
-    const detailsHeading = fixture.nativeElement.querySelector('h2');
-    expect(detailsHeading?.textContent?.trim()).toBe('Weather details');
+    const weatherCard = fixture.nativeElement.querySelector('.weather-card');
+    expect(weatherCard).toBeTruthy();
   });
 
   it('should display error message when error input is provided', () => {
@@ -82,34 +82,31 @@ describe('CityWeatherPage', () => {
     fixture.componentRef.setInput('error', errorMessage);
     fixture.detectChanges();
 
-    const errorElement = fixture.nativeElement.querySelector('.error');
+    const errorElement = fixture.nativeElement.querySelector('.error-card p');
     expect(errorElement?.textContent?.trim()).toBe(errorMessage);
   });
 
-  it('should not display weather details when error is present', () => {
+  it('should not display weather card when error is present', () => {
     fixture.componentRef.setInput('error', 'Some error message');
     fixture.detectChanges();
 
-    const weatherDetails = fixture.nativeElement.querySelector('h2');
-    expect(weatherDetails).toBeFalsy();
+    const weatherCard = fixture.nativeElement.querySelector('.weather-card');
+    expect(weatherCard).toBeFalsy();
   });
 
-  it('should not display "No weather data available" when error is present', () => {
+  it('should not display prompt message when error is present', () => {
     fixture.componentRef.setInput('error', 'Some error message');
     fixture.detectChanges();
 
-    const noDataMessage = fixture.nativeElement.querySelector('p:not(.error)');
-    expect(noDataMessage?.textContent?.trim()).not.toBe('No weather data available');
+    const noDataMessage = fixture.nativeElement.querySelector('.no-data');
+    expect(noDataMessage).toBeFalsy();
   });
 
-  it('should display "No weather data available" when no cityWeather and no error', () => {
+  it('should display prompt message when no cityWeather and no error', () => {
     fixture.detectChanges();
 
-    const paragraphs = fixture.nativeElement.querySelectorAll('p');
-    const noDataMessage = Array.from(paragraphs).find(
-      (p: any) => p.textContent?.trim() === 'No weather data available'
-    );
-    expect(noDataMessage).toBeTruthy();
+    const noDataMessage = fixture.nativeElement.querySelector('.no-data');
+    expect(noDataMessage?.textContent?.trim()).toBe('Enter a city name to see weather details');
   });
 });
 
