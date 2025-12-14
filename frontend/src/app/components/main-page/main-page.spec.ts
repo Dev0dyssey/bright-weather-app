@@ -1,13 +1,13 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { MainPageComponent } from './main-page';
-import { WeatherService } from '../../services/search-store';
+import { SearchService } from '../../services/search-service';
 import { CityWeatherResponse } from '../../models/city-weather-interface';
 
 describe('MainPageComponent', () => {
     let component: MainPageComponent;
     let fixture: ComponentFixture<MainPageComponent>;
-    let weatherServiceSpy: jasmine.SpyObj<WeatherService>;
+    let searchServiceSpy: jasmine.SpyObj<SearchService>;
 
     const mockWeatherResponse: CityWeatherResponse = {
         cityName: 'London',
@@ -26,13 +26,13 @@ describe('MainPageComponent', () => {
     };
 
     beforeEach(async () => {
-        weatherServiceSpy = jasmine.createSpyObj('WeatherService', ['searchCityWeather']);
+        searchServiceSpy = jasmine.createSpyObj('SearchService', ['searchCityWeather']);
 
         await TestBed.configureTestingModule({
             imports: [MainPageComponent],
             providers: [
                 provideZonelessChangeDetection(),
-                { provide: WeatherService, useValue: weatherServiceSpy }
+                { provide: SearchService, useValue: searchServiceSpy }
             ]
         }).compileComponents();
 
@@ -61,15 +61,15 @@ describe('MainPageComponent', () => {
 
     describe('onSearch', () => {
         it('should call weatherService with cityName and country', async () => {
-            weatherServiceSpy.searchCityWeather.and.resolveTo(mockWeatherResponse);
+            searchServiceSpy.searchCityWeather.and.resolveTo(mockWeatherResponse);
 
             await component.onSearch({ cityName: 'London', country: 'GB' });
 
-            expect(weatherServiceSpy.searchCityWeather).toHaveBeenCalledWith('London', 'GB');
+            expect(searchServiceSpy.searchCityWeather).toHaveBeenCalledWith('London', 'GB');
         });
 
         it('should set cityWeather on successful search', async () => {
-            weatherServiceSpy.searchCityWeather.and.resolveTo(mockWeatherResponse);
+            searchServiceSpy.searchCityWeather.and.resolveTo(mockWeatherResponse);
 
             await component.onSearch({ cityName: 'London', country: 'GB' });
 
@@ -77,18 +77,18 @@ describe('MainPageComponent', () => {
         });
 
         it('should clear error on successful search', async () => {
-            weatherServiceSpy.searchCityWeather.and.rejectWith(new Error('Previous error'));
+            searchServiceSpy.searchCityWeather.and.rejectWith(new Error('Previous error'));
             await component.onSearch({ cityName: 'InvalidCity', country: 'GB' });
             expect(component.error()).toBeDefined();
 
-            weatherServiceSpy.searchCityWeather.and.resolveTo(mockWeatherResponse);
+            searchServiceSpy.searchCityWeather.and.resolveTo(mockWeatherResponse);
             await component.onSearch({ cityName: 'London', country: 'GB' });
 
             expect(component.error()).toBeUndefined();
         });
 
         it('should set isLoading to false after successful search', async () => {
-            weatherServiceSpy.searchCityWeather.and.resolveTo(mockWeatherResponse);
+            searchServiceSpy.searchCityWeather.and.resolveTo(mockWeatherResponse);
 
             await component.onSearch({ cityName: 'London', country: 'GB' });
 
@@ -97,7 +97,7 @@ describe('MainPageComponent', () => {
 
         it('should set error when search fails', async () => {
             const errorMessage = 'We could not find MockCity in GB';
-            weatherServiceSpy.searchCityWeather.and.rejectWith(new Error(errorMessage));
+            searchServiceSpy.searchCityWeather.and.rejectWith(new Error(errorMessage));
 
             await component.onSearch({ cityName: 'MockCity', country: 'GB' });
 
@@ -105,18 +105,18 @@ describe('MainPageComponent', () => {
         });
 
         it('should clear cityWeather when search fails', async () => {
-            weatherServiceSpy.searchCityWeather.and.resolveTo(mockWeatherResponse);
+            searchServiceSpy.searchCityWeather.and.resolveTo(mockWeatherResponse);
             await component.onSearch({ cityName: 'London', country: 'GB' });
             expect(component.cityWeather()).toBeDefined();
 
-            weatherServiceSpy.searchCityWeather.and.rejectWith(new Error('City not found'));
+            searchServiceSpy.searchCityWeather.and.rejectWith(new Error('City not found'));
             await component.onSearch({ cityName: 'MockCity', country: 'GB' });
 
             expect(component.cityWeather()).toBeUndefined();
         });
 
         it('should set isLoading to false after failed search', async () => {
-            weatherServiceSpy.searchCityWeather.and.rejectWith(new Error('Error'));
+            searchServiceSpy.searchCityWeather.and.rejectWith(new Error('Error'));
 
             await component.onSearch({ cityName: 'MockCity', country: 'GB' });
 
@@ -124,7 +124,7 @@ describe('MainPageComponent', () => {
         });
 
         it('should handle non-Error exceptions gracefully', async () => {
-            weatherServiceSpy.searchCityWeather.and.rejectWith('String error');
+            searchServiceSpy.searchCityWeather.and.rejectWith('String error');
 
             await component.onSearch({ cityName: 'MockCity', country: 'GB' });
 
@@ -134,7 +134,7 @@ describe('MainPageComponent', () => {
 
     describe('onClearSearch', () => {
         it('should clear cityWeather', async () => {
-            weatherServiceSpy.searchCityWeather.and.resolveTo(mockWeatherResponse);
+            searchServiceSpy.searchCityWeather.and.resolveTo(mockWeatherResponse);
             await component.onSearch({ cityName: 'London', country: 'GB' });
 
             component.onClearSearch();
@@ -143,7 +143,7 @@ describe('MainPageComponent', () => {
         });
 
         it('should clear error', async () => {
-            weatherServiceSpy.searchCityWeather.and.rejectWith(new Error('Error'));
+            searchServiceSpy.searchCityWeather.and.rejectWith(new Error('Error'));
             await component.onSearch({ cityName: 'MockCity', country: 'GB' });
 
             component.onClearSearch();

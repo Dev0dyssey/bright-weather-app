@@ -6,7 +6,7 @@ import { CityWeatherResponse } from '../models/city-weather-interface';
 @Injectable({
     providedIn: 'root'
 })
-export class WeatherService {
+export class SearchService {
     private readonly http = inject(HttpClient);
     private readonly baseUrl = 'http://localhost:3000';
 

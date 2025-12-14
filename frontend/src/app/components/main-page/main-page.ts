@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { CitySearchComponent } from '../city-search/city-search';
 import { CityWeatherPageComponent } from '../city-weather-page/city-weather-page';
 import { CityWeatherResponse } from '../../models/city-weather-interface';
-import { WeatherService } from '../../services/search-store';
+import { SearchService } from '../../services/search-service';
 
 @Component({
     selector: 'app-main-page',
@@ -11,7 +11,7 @@ import { WeatherService } from '../../services/search-store';
     imports: [CitySearchComponent, CityWeatherPageComponent]
 })
 export class MainPageComponent {
-    private readonly weatherService = inject(WeatherService);
+    private readonly searchService = inject(SearchService);
     readonly cityWeather = signal<CityWeatherResponse | undefined>(undefined);
     readonly error = signal<string | undefined>(undefined);
     readonly isLoading = signal<boolean>(false);
@@ -20,7 +20,7 @@ export class MainPageComponent {
         try {
             this.isLoading.set(true);
             this.error.set(undefined);
-            const data = await this.weatherService.searchCityWeather(searchParams.cityName, searchParams.country);
+            const data = await this.searchService.searchCityWeather(searchParams.cityName, searchParams.country);
             this.cityWeather.set(data);
         } catch (error) {
             this.cityWeather.set(undefined);
