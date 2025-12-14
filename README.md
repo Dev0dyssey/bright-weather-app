@@ -18,7 +18,7 @@ A weather application that displays current weather information for cities world
 ## Tech Stack
 
 ### Frontend
-- Angular 20 (with HttpClient, Signals, and standalone components)
+- Angular 20
 - Angular Material
 - Bootstrap 5 (utilities and grid)
 - Bootstrap Icons
