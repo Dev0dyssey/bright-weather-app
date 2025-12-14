@@ -170,29 +170,39 @@ bright-weather-app/
 
 Some ideas for future improvements to the code, especially if this were to be taken to a more production ready state:
 
-### High Priority
+### Architecture & Configuration
 
 | Improvement | Description |
 |-------------|-------------|
-| **Environment configuration** | Use Angular environment files to manage API URLs for different environments (development, staging, production) |
-| **Request timeout** | Add timeout handling for API calls to prevent hanging requests if OpenWeatherMap is slow/unresponsive |
-| **CORS configuration** | Restrict CORS to specific origins in production instead of allowing all origins |
-| **Logging infrastructure** | Implement proper logging |
+| **Environment configuration** | Use Angular environment files to manage API URLs across development, staging, and production environments |
+| **API versioning** | Prefix routes with `/api/v1/` to support future breaking changes without disrupting existing clients |
+| **Centralised error middleware** | Replace per-controller `try/catch` blocks with Express error-handling middleware for consistency |
+| **Server module export** | Export the Express app for integration testing without starting the server |
 
-### Medium Priority
-
-| Improvement | Description |
-|-------------|-------------|
-| **Country validation** | Add server-side validation for country codes to provide clearer error messages |
-| **Caching** | Implement caching for weather data to reduce API calls |
-
-### Low Priority
+### Security & Reliability
 
 | Improvement | Description |
 |-------------|-------------|
-| **Rate limiting** | Add rate limiting awareness for OpenWeatherMap API limits |
+| **CORS restriction** | Lock down CORS to specific origins in production instead of allowing all |
+| **Request timeouts** | Add timeout handling for external API calls to prevent hanging requests |
+| **Country code validation** | Validate country codes server-side against a whitelist to provide clearer error messages |
+| **Rate limiting** | Implement rate limiting to stay within OpenWeatherMap API quotas |
+
+### Code Quality & Developer Experience
+
+| Improvement | Description |
+|-------------|-------------|
+| **ESLint configuration** | Add linting rules to enforce consistent code style across the codebase |
+| **Pre-commit hooks** | Use Husky + lint-staged to run linting and tests before commits |
+| **Shared constants** | Extract hardcoded values (countries list, debounce time, etc.) into shared constant files |
+
+### Testing & Monitoring
+
+| Improvement | Description |
+|-------------|-------------|
+| **E2E tests** | Add end-to-end tests using Playwright or Cypress for critical user flows |
 | **Health endpoint** | Add a `/health` endpoint for monitoring and health checks |
-| **E2E tests** | Add end-to-end tests using Playwright or Cypress |
+| **Response caching** | Cache weather data briefly to reduce API calls and improve response times |
 
 ## License
 
