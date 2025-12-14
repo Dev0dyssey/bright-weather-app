@@ -60,16 +60,50 @@ describe('searchController', () => {
             });
         });
 
-        it('should return 500 when service throws error', async () => {
-            mockReq.query = { cityName: 'FakeCity', country: 'GB' };
-            getCityWeather.mockRejectedValueOnce(new Error('No coordinates found'));
+        it('should return 404 when city not found', async () => {
+            const { NotFoundError } = require('../../utils/errors');
+            
+            mockReq.query = { cityName: 'MockCity', country: 'GB' };
+            getCityWeather.mockRejectedValueOnce(
+                new NotFoundError('We could not find MockCity in GB')
+            );
+
+            await searchCityWeather(mockReq, mockRes);
+
+            expect(mockRes.status).toHaveBeenCalledWith(404);
+            expect(mockRes.json).toHaveBeenCalledWith({
+                error: 'NotFoundError',
+                message: 'We could not find MockCity in GB'
+            });
+        });
+
+        it('should return 503 when service unavailable', async () => {
+            const { ServiceUnavailableError } = require('../../utils/errors');
+            
+            mockReq.query = { cityName: 'London', country: 'GB' };
+            getCityWeather.mockRejectedValueOnce(
+                new ServiceUnavailableError('Weather service unavailable')
+            );
+
+            await searchCityWeather(mockReq, mockRes);
+
+            expect(mockRes.status).toHaveBeenCalledWith(503);
+            expect(mockRes.json).toHaveBeenCalledWith({
+                error: 'ServiceUnavailableError',
+                message: 'Weather service unavailable'
+            });
+        });
+
+        it('should return 500 for unexpected errors', async () => {
+            mockReq.query = { cityName: 'London', country: 'GB' };
+            getCityWeather.mockRejectedValueOnce(new Error('Unexpected error'));
 
             await searchCityWeather(mockReq, mockRes);
 
             expect(mockRes.status).toHaveBeenCalledWith(500);
             expect(mockRes.json).toHaveBeenCalledWith({
-                error: 'Internal server error',
-                message: 'No coordinates found'
+                error: 'Error',
+                message: 'Unexpected error'
             });
         });
 
