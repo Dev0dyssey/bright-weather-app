@@ -29,9 +29,9 @@ describe('weatherService', () => {
                 json: async () => []
             });
 
-            await expect(getCoordinates('FakeCity', 'GB'))
+            await expect(getCoordinates('MockCity', 'GB'))
                 .rejects
-                .toThrow('No coordinates found for FakeCity in GB');
+                .toThrow('We could not find MockCity in GB');
         });
 
         it('should throw error when API fails', async () => {
@@ -103,7 +103,7 @@ describe('weatherService', () => {
 
             await expect(getWeatherForLocation(51.5074, -0.1278))
                 .rejects
-                .toThrow('No current weather data found');
+                .toThrow('Weather data is currently unavailable');
         });
     });
 
@@ -181,9 +181,9 @@ describe('weatherService', () => {
                 json: async () => []  // No results
             });
 
-            await expect(getCityWeather('FakeCity', 'GB'))
+            await expect(getCityWeather('MockCity', 'GB'))
                 .rejects
-                .toThrow('No coordinates found');
+                .toThrow('We could not find MockCity in GB');
         });
 
         it('should fail if getWeatherForLocation fails', async () => {

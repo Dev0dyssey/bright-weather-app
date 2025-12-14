@@ -13,7 +13,7 @@ const getCoordinates = async (cityName, country = 'GB') => {
         const data = await response.json();
         console.log('Data:', data);
         if (!data || data.length === 0) {
-            throw new Error(`No coordinates found for ${cityName} in ${country}`);
+            throw new Error(`We could not find ${cityName} in ${country}. Please check the city name or try a different city`);
         }
         const { lat, lon } = data[0];
         console.log(`Coordinates found for ${cityName} in ${country}: ${lat}, ${lon}`);
@@ -37,7 +37,7 @@ const getWeatherForLocation = async (lat, lon) => {
         const data = await response.json();
         console.log('Weather data:', data);
         if (!data || !data.main) {
-            throw new Error('No current weather data found for the given location');
+            throw new Error('Weather data is currently unavailable for this location. Please try again later');
         }
         return data;
     } catch (error) {
