@@ -5,6 +5,7 @@ const searchRoutes = require('./routes/search');
 const PORT = process.env.PORT || 3000;
 const app = express();
 
+// CORS: Open for local development. Restrict in production.
 app.use(cors());
 app.use(express.json());
 

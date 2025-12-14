@@ -7,8 +7,6 @@ const WEATHER_BASE_URL = 'https://api.openweathermap.org/data/2.5/weather';
 const MS_TO_MPH_CONVERSION = 2.23694;
 const { ValidationError, NotFoundError, ServiceUnavailableError } = require('../../utils/errors');
 
-
-
 const msToMph = (ms) => ms != null ? Math.round(ms * MS_TO_MPH_CONVERSION * 10) / 10 : null;
 
 const getCoordinates = async (cityName, country = 'GB') => {
