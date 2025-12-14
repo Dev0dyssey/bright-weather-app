@@ -64,7 +64,9 @@ const getCityWeather = async (cityName, country = 'GB') => {
 };
 
 module.exports = {
-    getCoordinates,
-    getWeatherForLocation,
-    getCityWeather
+    getCityWeather,
+    _internal: {
+        getCoordinates,
+        getWeatherForLocation,
+    }
 }

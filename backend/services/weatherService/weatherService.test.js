@@ -1,4 +1,7 @@
-const { getCoordinates, getWeatherForLocation, getCityWeather } = require('./weatherService');
+process.env.OPENWEATHER_API_KEY = 'test-api-key';
+
+const { getCityWeather, _internal } = require('./weatherService');
+const { getWeatherForLocation, getCoordinates } = _internal;
 
 global.fetch = jest.fn();
 

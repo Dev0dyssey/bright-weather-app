@@ -1,3 +1,4 @@
+process.env.OPENWEATHER_API_KEY = 'test-api-key';
 const { searchCityWeather } = require('./searchController');
 const { getCityWeather } = require('../../services/weatherService/weatherService');
 
