@@ -61,7 +61,7 @@ const getCityWeather = async (cityName, country = 'GB') => {
             condition: rawWeatherData.weather?.[0]?.main ?? null,
             description: rawWeatherData.weather?.[0]?.description ?? null
         }
-    }
+    };
 };
 
 module.exports = {
@@ -70,4 +70,4 @@ module.exports = {
         getCoordinates,
         getWeatherForLocation,
     }
-}
+};

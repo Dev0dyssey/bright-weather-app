@@ -26,4 +26,4 @@ const searchCityWeather = async(req, res) => {
 
 module.exports = {
     searchCityWeather
-}
+};

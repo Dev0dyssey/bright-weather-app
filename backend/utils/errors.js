@@ -35,4 +35,4 @@ module.exports = {
     ValidationError,
     NotFoundError,
     ServiceUnavailableError
-}
+};
