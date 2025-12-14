@@ -40,8 +40,7 @@ describe('CitySearch', () => {
   });
 
   it('should debounce search input by 300ms', (done) => {
-    const input = fixture.nativeElement.querySelector('input');
-    const performSearchSpy = spyOn(component as any, 'performSearch');
+    const onSearchSpy = spyOn(component.onSearch, 'emit');
 
     // Type multiple characters quickly
     component['searchControl'].setValue('L');
@@ -52,13 +51,13 @@ describe('CitySearch', () => {
         setTimeout(() => {
           component['searchControl'].setValue('Lond');
           
-          // Should not have called performSearch yet (only 100ms passed)
-          expect(performSearchSpy).not.toHaveBeenCalled();
+          // Should not have emitted yet (only 100ms passed)
+          expect(onSearchSpy).not.toHaveBeenCalled();
 
           // After 300ms of no changes, should trigger search
           setTimeout(() => {
-            expect(performSearchSpy).toHaveBeenCalledTimes(1);
-            expect(performSearchSpy).toHaveBeenCalledWith('Lond');
+            expect(onSearchSpy).toHaveBeenCalledTimes(1);
+            expect(onSearchSpy).toHaveBeenCalledWith('Lond');
             done();
           }, 350); // Wait for debounce
         }, 100);
@@ -66,61 +65,63 @@ describe('CitySearch', () => {
     }, 100);
   });
 
-  it('should call performSearch when query has content', (done) => {
-    const performSearchSpy = spyOn(component as any, 'performSearch');
+  it('should emit onSearch when query has content', (done) => {
+    const onSearchSpy = spyOn(component.onSearch, 'emit');
 
     component['searchControl'].setValue('Paris');
     
     setTimeout(() => {
       fixture.detectChanges();
-      expect(performSearchSpy).toHaveBeenCalledWith('Paris');
+      expect(onSearchSpy).toHaveBeenCalledWith('Paris');
       done();
     }, 350);
   });
 
-  it('should not call performSearch for empty or whitespace-only queries', (done) => {
-    const performSearchSpy = spyOn(component as any, 'performSearch');
+  it('should not emit onSearch for empty or whitespace-only queries', (done) => {
+    const onSearchSpy = spyOn(component.onSearch, 'emit');
 
     component['searchControl'].setValue('');
     setTimeout(() => {
-      expect(performSearchSpy).not.toHaveBeenCalled();
+      expect(onSearchSpy).not.toHaveBeenCalled();
 
       component['searchControl'].setValue('   ');
       setTimeout(() => {
-        expect(performSearchSpy).not.toHaveBeenCalled();
+        expect(onSearchSpy).not.toHaveBeenCalled();
         done();
       }, 350);
     }, 350);
   });
 
   it('should only trigger search for distinct values', (done) => {
-    const performSearchSpy = spyOn(component as any, 'performSearch');
+    const onSearchSpy = spyOn(component.onSearch, 'emit');
 
     component['searchControl'].setValue('Berlin');
     setTimeout(() => {
-      expect(performSearchSpy).toHaveBeenCalledTimes(1);
+      expect(onSearchSpy).toHaveBeenCalledTimes(1);
 
       // Same value should not trigger again
       component['searchControl'].setValue('Berlin');
       setTimeout(() => {
-        expect(performSearchSpy).toHaveBeenCalledTimes(1);
+        expect(onSearchSpy).toHaveBeenCalledTimes(1);
 
         // Different value should trigger
         component['searchControl'].setValue('Munich');
         setTimeout(() => {
-          expect(performSearchSpy).toHaveBeenCalledTimes(2);
+          expect(onSearchSpy).toHaveBeenCalledTimes(2);
           done();
         }, 350);
       }, 350);
     }, 350);
   });
 
-  it('should clear search control when onClear is called', () => {
+  it('should clear search control and emit onClearSearch when onClear is called', () => {
+    const onClearSearchSpy = spyOn(component.onClearSearch, 'emit');
     component['searchControl'].setValue('Tokyo');
 
     component.onClear();
 
     expect(component['searchControl'].value).toBe('');
+    expect(onClearSearchSpy).toHaveBeenCalled();
   });
 
   it('should render clear button when searchControl has value', () => {
@@ -161,4 +162,3 @@ describe('CitySearch', () => {
     expect(input?.getAttribute('type')).toBe('text');
   });
 });
-

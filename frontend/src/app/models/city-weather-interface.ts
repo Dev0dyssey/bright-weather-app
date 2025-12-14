@@ -1,16 +1,15 @@
-export interface CityWeather {
+export interface CityWeatherResponse {
     cityName: string;
-    currentWeather: CurrentWeather;
-    currentTemperature: number;
-    minTemperature: number;
-    maxTemperature: number;
-    feelsLikeTemperature: number;
-    humidity: number;
-    windSpeed: number;
-    lastHourRainVolume: number;
+    country: string;
+    locationWeather: LocationWeather;
 }
 
-export interface CurrentWeather {
-    weather: string;
-    description: string;
+export interface LocationWeather {
+    temp: number;
+    feelsLike: number;
+    humidity: number;
+    tempMin: number;
+    tempMax: number;
+    windSpeedMph: number;
+    rainVolumeLastHour: number | null;
 }

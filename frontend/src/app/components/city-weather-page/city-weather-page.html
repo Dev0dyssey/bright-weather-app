@@ -1,4 +1,16 @@
 <div class="city-weather-page">
     <h1>City Weather for {{ cityWeather()?.cityName ?? 'Default City Name' }}</h1>
-    <h2>Weather details</h2>
+    @if (cityWeather()) {
+        <h2>Weather details</h2>
+        <p>Temperature: {{ cityWeather()?.locationWeather?.temp }}°C</p>
+        <p>Feels like: {{ cityWeather()?.locationWeather?.feelsLike }}°C</p>
+        <p>Humidity: {{ cityWeather()?.locationWeather?.humidity }}%</p>
+        <p>Min temperature: {{ cityWeather()?.locationWeather?.tempMin }}°C</p>
+        <p>Max temperature: {{ cityWeather()?.locationWeather?.tempMax }}°C</p>
+        <p>Wind speed: {{ cityWeather()?.locationWeather?.windSpeedMph }} mph</p>
+        <p>Rain volume last hour: {{ cityWeather()?.locationWeather?.rainVolumeLastHour ?? 'N/A' }} mm</p>
+    }
+    @else {
+        <p>No weather data available</p>
+    }
 </div>

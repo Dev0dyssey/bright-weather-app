@@ -15,6 +15,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 export class CitySearch {
     protected readonly searchControl = new FormControl('');
     onSearch = output<string>();
+    onClearSearch = output<void>();
 
     constructor() {
         this.searchControl.valueChanges.pipe(
@@ -30,6 +31,7 @@ export class CitySearch {
     }
     onClear(): void {
         this.searchControl.setValue('');
+        this.onClearSearch.emit();
     }
 }
 

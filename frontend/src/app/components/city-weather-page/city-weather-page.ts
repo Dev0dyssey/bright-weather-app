@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { CityWeather } from '../../models/city-weather-interface';
+import { CityWeatherResponse } from '../../models/city-weather-interface';
 
 @Component({
     selector: 'app-city-weather-page',
@@ -7,5 +7,5 @@ import { CityWeather } from '../../models/city-weather-interface';
     styleUrls: ['./city-weather-page.scss']
 })
 export class CityWeatherPage {
-    readonly cityWeather = input<CityWeather>();
+    readonly cityWeather = input<CityWeatherResponse>();
 }

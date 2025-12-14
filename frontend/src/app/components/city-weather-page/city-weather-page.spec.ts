@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
 import { CityWeatherPage } from './city-weather-page';
-import { CityWeather } from '../../models/city-weather-interface';
+import { CityWeatherResponse } from '../../models/city-weather-interface';
 
 describe('CityWeatherPage', () => {
   let component: CityWeatherPage;
@@ -29,19 +29,18 @@ describe('CityWeatherPage', () => {
   });
 
   it('should display city name when cityWeather input is provided', () => {
-    const mockCityWeather: CityWeather = {
+    const mockCityWeather: CityWeatherResponse = {
       cityName: 'London',
-      currentWeather: {
-        weather: 'Clear',
-        description: 'clear sky'
-      },
-      currentTemperature: 20,
-      minTemperature: 15,
-      maxTemperature: 25,
-      feelsLikeTemperature: 19,
-      humidity: 60,
-      windSpeed: 10,
-      lastHourRainVolume: 0
+      country: 'UK',
+      locationWeather: {
+        temp: 20,
+        feelsLike: 19,
+        humidity: 60,
+        tempMin: 15,
+        tempMax: 25,
+        windSpeedMph: 10,
+        rainVolumeLastHour: 0
+      }
     };
 
     fixture.componentRef.setInput('cityWeather', mockCityWeather);
@@ -51,8 +50,24 @@ describe('CityWeatherPage', () => {
     expect(heading?.textContent?.trim()).toBe('City Weather for London');
   });
 
-  it('should render weather details heading', () => {
+  it('should render weather details heading when cityWeather is provided', () => {
+    const mockCityWeather: CityWeatherResponse = {
+      cityName: 'London',
+      country: 'UK',
+      locationWeather: {
+        temp: 20,
+        feelsLike: 19,
+        humidity: 60,
+        tempMin: 15,
+        tempMax: 25,
+        windSpeedMph: 10,
+        rainVolumeLastHour: 0
+      }
+    };
+
+    fixture.componentRef.setInput('cityWeather', mockCityWeather);
     fixture.detectChanges();
+
     const detailsHeading = fixture.nativeElement.querySelector('h2');
     expect(detailsHeading?.textContent?.trim()).toBe('Weather details');
   });
