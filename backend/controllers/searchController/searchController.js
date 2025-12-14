@@ -1,4 +1,4 @@
-const { getCoordinates } = require('../services/weatherService');
+const { getCoordinates } = require('../../services/weatherService/weatherService');
 
 const searchCityWeather = async(req, res) => {
     try {
