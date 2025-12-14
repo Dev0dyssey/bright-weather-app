@@ -108,21 +108,27 @@ describe('weatherService', () => {
     });
 
     describe('getCityWeather', () => {
-        it('should return combined city and weather data', async () => {
+        it('should return transformed weather data', async () => {
             // First call - getCoordinates
             fetch.mockResolvedValueOnce({
                 ok: true,
                 json: async () => [{ lat: 51.5074, lon: -0.1278 }]
             });
 
-            // Second call - getWeatherForLocation
-            const mockWeatherData = {
-                main: { temp: 15.5, feels_like: 14.2, humidity: 72 },
-                wind: { speed: 3.5 }
-            };
+            // Second call - getWeatherForLocation (raw API response)
             fetch.mockResolvedValueOnce({
                 ok: true,
-                json: async () => mockWeatherData
+                json: async () => ({
+                    main: {
+                        temp: 15.5,
+                        feels_like: 14.2,
+                        humidity: 72,
+                        temp_min: 13.0,
+                        temp_max: 17.0
+                    },
+                    wind: { speed: 4.0 },  // 4.0 m/s = 8.9 mph
+                    rain: { '1h': 0.5 }
+                })
             });
 
             const result = await getCityWeather('London', 'GB');
@@ -130,9 +136,43 @@ describe('weatherService', () => {
             expect(result).toEqual({
                 cityName: 'London',
                 country: 'GB',
-                locationWeather: mockWeatherData
+                locationWeather: {
+                    temp: 15.5,
+                    feelsLike: 14.2,
+                    humidity: 72,
+                    tempMin: 13.0,
+                    tempMax: 17.0,
+                    windSpeedMph: 8.9,
+                    rainVolumeLastHour: 0.5
+                }
             });
             expect(fetch).toHaveBeenCalledTimes(2);
+        });
+
+        it('should handle missing rain data', async () => {
+            fetch.mockResolvedValueOnce({
+                ok: true,
+                json: async () => [{ lat: 51.5074, lon: -0.1278 }]
+            });
+
+            fetch.mockResolvedValueOnce({
+                ok: true,
+                json: async () => ({
+                    main: {
+                        temp: 15.5,
+                        feels_like: 14.2,
+                        humidity: 72,
+                        temp_min: 13.0,
+                        temp_max: 17.0
+                    },
+                    wind: { speed: 4.0 }
+                    // No rain property
+                })
+            });
+
+            const result = await getCityWeather('London', 'GB');
+
+            expect(result.locationWeather.rainVolumeLastHour).toBeNull();
         });
 
         it('should fail if getCoordinates fails', async () => {

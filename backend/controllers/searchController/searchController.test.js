@@ -25,8 +25,13 @@ describe('searchController', () => {
                 cityName: 'London',
                 country: 'GB',
                 locationWeather: {
-                    main: { temp: 15.5, feels_like: 14.2, humidity: 72 },
-                    wind: { speed: 3.5 }
+                    temp: 15.5,
+                    feelsLike: 14.2,
+                    humidity: 72,
+                    tempMin: 13.0,
+                    tempMax: 17.0,
+                    windSpeedMph: 8.9,
+                    rainVolumeLastHour: 0.5
                 }
             };
 
@@ -70,7 +75,13 @@ describe('searchController', () => {
                 cityName: 'London',
                 country: undefined,
                 locationWeather: {
-                    main: { temp: 15.5 }
+                    temp: 15.5,
+                    feelsLike: 14.2,
+                    humidity: 72,
+                    tempMin: 13.0,
+                    tempMax: 17.0,
+                    windSpeedMph: 8.9,
+                    rainVolumeLastHour: null
                 }
             };
 

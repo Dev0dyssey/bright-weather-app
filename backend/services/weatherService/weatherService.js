@@ -1,6 +1,7 @@
 const API_KEY = process.env.OPENWEATHER_API_KEY;
 const GEO_BASE_URL = 'http://api.openweathermap.org/geo/1.0/direct';
 const WEATHER_BASE_URL = 'https://api.openweathermap.org/data/2.5/weather';
+const msToMph = (ms) => Math.round(ms * 2.23694 * 10) / 10;
 
 const getCoordinates = async (cityName, country = 'GB') => {
     const url = `${GEO_BASE_URL}?q=${cityName},${country}&limit=1&appid=${API_KEY}`;
@@ -47,11 +48,19 @@ const getWeatherForLocation = async (lat, lon) => {
 
 const getCityWeather = async (cityName, country = 'GB') => {
     const { lat, lon } = await getCoordinates(cityName, country);
-    const locationWeather = await getWeatherForLocation(lat, lon);
+    const rawWeatherData = await getWeatherForLocation(lat, lon);
     return {
         cityName,
         country,
-        locationWeather
+        locationWeather: {
+            temp: rawWeatherData.main.temp,
+            feelsLike: rawWeatherData.main.feels_like,
+            humidity: rawWeatherData.main.humidity,
+            tempMin: rawWeatherData.main.temp_min,
+            tempMax: rawWeatherData.main.temp_max,
+            windSpeedMph: msToMph(rawWeatherData.wind.speed),
+            rainVolumeLastHour: rawWeatherData.rain?.['1h'] ?? null
+        }
     }
 };
 
