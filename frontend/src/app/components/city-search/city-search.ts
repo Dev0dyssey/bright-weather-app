@@ -1,4 +1,4 @@
-import { Component, output } from '@angular/core';
+import { Component, output, inject, DestroyRef } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
@@ -6,6 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 
 
@@ -16,6 +17,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
     imports: [MatIconModule, MatButtonModule, ReactiveFormsModule, MatInputModule, MatFormFieldModule, MatSelectModule]
 })
 export class CitySearch {
+    private readonly destroyRef = inject(DestroyRef);
     readonly countries = [
         { name: 'United Kingdom', code: 'GB' },
         { name: 'Canada', code: 'CA' },
@@ -33,7 +35,8 @@ export class CitySearch {
     constructor() {
         this.searchControl.valueChanges.pipe(
             debounceTime(300),
-            distinctUntilChanged()
+            distinctUntilChanged(),
+            takeUntilDestroyed(this.destroyRef)
         )
             .subscribe(value => {
                 const query = (value || '').trim();
@@ -42,6 +45,8 @@ export class CitySearch {
                         cityName: query,
                         country: this.countryControl.value || 'GB'
                     });
+                } else {
+                    this.onClearSearch.emit();
                 }
             });
         this.countryControl.valueChanges.subscribe(value => {
