@@ -71,5 +71,41 @@ describe('CityWeatherPage', () => {
     const detailsHeading = fixture.nativeElement.querySelector('h2');
     expect(detailsHeading?.textContent?.trim()).toBe('Weather details');
   });
+
+  it('should display error message when error input is provided', () => {
+    const errorMessage = 'We could not find MockCity in GB. Please check the city name or try a different city';
+    
+    fixture.componentRef.setInput('error', errorMessage);
+    fixture.detectChanges();
+
+    const errorElement = fixture.nativeElement.querySelector('.error');
+    expect(errorElement?.textContent?.trim()).toBe(errorMessage);
+  });
+
+  it('should not display weather details when error is present', () => {
+    fixture.componentRef.setInput('error', 'Some error message');
+    fixture.detectChanges();
+
+    const weatherDetails = fixture.nativeElement.querySelector('h2');
+    expect(weatherDetails).toBeFalsy();
+  });
+
+  it('should not display "No weather data available" when error is present', () => {
+    fixture.componentRef.setInput('error', 'Some error message');
+    fixture.detectChanges();
+
+    const noDataMessage = fixture.nativeElement.querySelector('p:not(.error)');
+    expect(noDataMessage?.textContent?.trim()).not.toBe('No weather data available');
+  });
+
+  it('should display "No weather data available" when no cityWeather and no error', () => {
+    fixture.detectChanges();
+
+    const paragraphs = fixture.nativeElement.querySelectorAll('p');
+    const noDataMessage = Array.from(paragraphs).find(
+      (p: any) => p.textContent?.trim() === 'No weather data available'
+    );
+    expect(noDataMessage).toBeTruthy();
+  });
 });
 

@@ -12,15 +12,21 @@ import { searchCityWeather } from '../../services/search-store';
 })
 export class MainPage {
     readonly cityWeather = signal<CityWeatherResponse | undefined>(undefined);
+    readonly error = signal<string | undefined>(undefined);
 
     async onSearch(query: string): Promise<void> {
-        console.log('Searching for:', query);
-        const data = await searchCityWeather(query);
-        console.log('Data:', data);
-        this.cityWeather.set(data);
+        try {
+            this.error.set(undefined);
+            const data = await searchCityWeather(query);
+            this.cityWeather.set(data);
+        } catch (error) {
+            this.cityWeather.set(undefined);
+            this.error.set(error instanceof Error ? error.message : 'An error has occurred');
+        }
     }
 
     onClearSearch(): void {
         this.cityWeather.set(undefined);
+        this.error.set(undefined);
     }
 }

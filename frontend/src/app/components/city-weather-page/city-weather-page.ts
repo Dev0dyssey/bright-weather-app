@@ -8,4 +8,5 @@ import { CityWeatherResponse } from '../../models/city-weather-interface';
 })
 export class CityWeatherPage {
     readonly cityWeather = input<CityWeatherResponse>();
+    readonly error = input<string>();
 }

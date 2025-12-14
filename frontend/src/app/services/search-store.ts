@@ -9,5 +9,10 @@ export const searchCityWeather = async (cityName: string, country?: string): Pro
 
     const response = await fetch(`${BASE_URL}/search?${params.toString()}`);
     const data = await response.json();
+    
+    if (!response.ok) {
+        throw new Error(data.message || 'An error occurred while fetching weather data');
+    }
+    
     return data;
 }
