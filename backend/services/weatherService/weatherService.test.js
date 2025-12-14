@@ -156,7 +156,7 @@ describe('weatherService', () => {
             expect(fetch).toHaveBeenCalledTimes(2);
         });
 
-        it('should handle missing optional data (rain, weather)', async () => {
+        it('should handle missing optional data (wind, rain, weather)', async () => {
             fetch.mockResolvedValueOnce({
                 ok: true,
                 json: async () => [{ lat: 51.5074, lon: -0.1278 }]
@@ -171,14 +171,14 @@ describe('weatherService', () => {
                         humidity: 72,
                         temp_min: 13.0,
                         temp_max: 17.0
-                    },
-                    wind: { speed: 4.0 }
-                    // No rain or weather property
+                    }
+                    // No wind, rain, or weather property
                 })
             });
 
             const result = await getCityWeather('London', 'GB');
 
+            expect(result.locationWeather.windSpeedMph).toBeNull();
             expect(result.locationWeather.rainVolumeLastHour).toBeNull();
             expect(result.locationWeather.condition).toBeNull();
             expect(result.locationWeather.description).toBeNull();

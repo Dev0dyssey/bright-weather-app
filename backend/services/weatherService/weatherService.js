@@ -9,7 +9,7 @@ const { ValidationError, NotFoundError, ServiceUnavailableError } = require('../
 
 
 
-const msToMph = (ms) => Math.round(ms * MS_TO_MPH_CONVERSION * 10) / 10;
+const msToMph = (ms) => ms != null ? Math.round(ms * MS_TO_MPH_CONVERSION * 10) / 10 : null;
 
 const getCoordinates = async (cityName, country = 'GB') => {
     if (!cityName?.trim()) {
@@ -56,7 +56,7 @@ const getCityWeather = async (cityName, country = 'GB') => {
             humidity: rawWeatherData.main.humidity,
             tempMin: rawWeatherData.main.temp_min,
             tempMax: rawWeatherData.main.temp_max,
-            windSpeedMph: msToMph(rawWeatherData.wind.speed),
+            windSpeedMph: msToMph(rawWeatherData.wind?.speed),
             rainVolumeLastHour: rawWeatherData.rain?.['1h'] ?? null,
             condition: rawWeatherData.weather?.[0]?.main ?? null,
             description: rawWeatherData.weather?.[0]?.description ?? null
