@@ -1,3 +1,9 @@
+/**
+ * Base class for all weather API errors
+ * @extends Error
+ * @param {string} message - Error message
+ * @param {number} statusCode - HTTP status code
+ */
 class WeatherAPIError extends Error {
     constructor(message, statusCode) {
         super(message);

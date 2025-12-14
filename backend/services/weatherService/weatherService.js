@@ -1,12 +1,14 @@
+const { ValidationError, NotFoundError, ServiceUnavailableError } = require('../../utils/errors');
+
 const API_KEY = process.env.OPENWEATHER_API_KEY;
 if (!API_KEY) {
     throw new Error('OpenWeather API key is not set');
 }
+
 const GEO_BASE_URL = 'https://api.openweathermap.org/geo/1.0/direct';
 const WEATHER_BASE_URL = 'https://api.openweathermap.org/data/2.5/weather';
-const MS_TO_MPH_CONVERSION = 2.23694;
-const { ValidationError, NotFoundError, ServiceUnavailableError } = require('../../utils/errors');
 
+const MS_TO_MPH_CONVERSION = 2.23694;
 const msToMph = (ms) => ms != null ? Math.round(ms * MS_TO_MPH_CONVERSION * 10) / 10 : null;
 
 const getCoordinates = async (cityName, country = 'GB') => {
@@ -42,6 +44,15 @@ const getWeatherForLocation = async (lat, lon) => {
     return data;
 };
 
+/**
+ * Fetches current weather data for a city
+ * @param {string} cityName - Name of the city to search
+ * @param {string} [country='GB'] - ISO 3166-1 alpha-2 country code
+ * @returns {Promise<Object>} Weather data with transformed fields
+ * @throws {ValidationError} If cityName is empty
+ * @throws {NotFoundError} If city not found in country
+ * @throws {ServiceUnavailableError} If OpenWeather API is unavailable
+ */
 const getCityWeather = async (cityName, country = 'GB') => {
     const { lat, lon } = await getCoordinates(cityName, country);
     const rawWeatherData = await getWeatherForLocation(lat, lon);
