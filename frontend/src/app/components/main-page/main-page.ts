@@ -10,7 +10,7 @@ import { WeatherService } from '../../services/search-store';
     styleUrls: ['./main-page.scss'],
     imports: [CitySearchComponent, CityWeatherPageComponent]
 })
-export class MainPage {
+export class MainPageComponent {
     private readonly weatherService = inject(WeatherService);
     readonly cityWeather = signal<CityWeatherResponse | undefined>(undefined);
     readonly error = signal<string | undefined>(undefined);
