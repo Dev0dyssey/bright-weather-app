@@ -1,19 +1,19 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
-import { CityWeatherPage } from './city-weather-page';
+import { CityWeatherPageComponent } from './city-weather-page';
 import { CityWeatherResponse } from '../../models/city-weather-interface';
 
 describe('CityWeatherPage', () => {
-  let component: CityWeatherPage;
-  let fixture: ComponentFixture<CityWeatherPage>;
+  let component: CityWeatherPageComponent;
+  let fixture: ComponentFixture<CityWeatherPageComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CityWeatherPage],
+      imports: [CityWeatherPageComponent],
       providers: [provideZonelessChangeDetection()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CityWeatherPage);
+    fixture = TestBed.createComponent(CityWeatherPageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

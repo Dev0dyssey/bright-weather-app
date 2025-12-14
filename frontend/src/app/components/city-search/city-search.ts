@@ -14,7 +14,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     styleUrls: ['./city-search.scss'],
     imports: [MatIconModule, MatButtonModule, ReactiveFormsModule, MatInputModule, MatFormFieldModule, MatSelectModule]
 })
-export class CitySearch {
+export class CitySearchComponent {
     private readonly destroyRef = inject(DestroyRef);
     readonly countries = [
         { name: 'United Kingdom', code: 'GB' },

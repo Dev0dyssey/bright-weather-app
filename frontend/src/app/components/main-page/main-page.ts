@@ -1,6 +1,6 @@
 import { Component, inject, signal } from '@angular/core';
-import { CitySearch } from '../city-search/city-search';
-import { CityWeatherPage } from '../city-weather-page/city-weather-page';
+import { CitySearchComponent } from '../city-search/city-search';
+import { CityWeatherPageComponent } from '../city-weather-page/city-weather-page';
 import { CityWeatherResponse } from '../../models/city-weather-interface';
 import { WeatherService } from '../../services/search-store';
 
@@ -8,7 +8,7 @@ import { WeatherService } from '../../services/search-store';
     selector: 'app-main-page',
     templateUrl: './main-page.html',
     styleUrls: ['./main-page.scss'],
-    imports: [CitySearch, CityWeatherPage]
+    imports: [CitySearchComponent, CityWeatherPageComponent]
 })
 export class MainPage {
     private readonly weatherService = inject(WeatherService);

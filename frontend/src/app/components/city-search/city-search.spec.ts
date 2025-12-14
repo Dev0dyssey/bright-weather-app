@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideZonelessChangeDetection } from '@angular/core';
-import { CitySearch } from './city-search';
+import { CitySearchComponent } from './city-search';
 
 describe('CitySearch', () => {
-  let component: CitySearch;
-  let fixture: ComponentFixture<CitySearch>;
+  let component: CitySearchComponent;
+  let fixture: ComponentFixture<CitySearchComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CitySearch],
+      imports: [CitySearchComponent],
       providers: [provideZonelessChangeDetection()]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CitySearch);
+    fixture = TestBed.createComponent(CitySearchComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

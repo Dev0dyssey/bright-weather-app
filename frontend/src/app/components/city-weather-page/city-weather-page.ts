@@ -6,7 +6,7 @@ import { CityWeatherResponse } from '../../models/city-weather-interface';
     templateUrl: './city-weather-page.html',
     styleUrls: ['./city-weather-page.scss']
 })
-export class CityWeatherPage {
+export class CityWeatherPageComponent {
     readonly cityWeather = input<CityWeatherResponse>();
     readonly error = input<string>();
 
