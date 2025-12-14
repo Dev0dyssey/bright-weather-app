@@ -14,10 +14,10 @@ export class MainPage {
     readonly cityWeather = signal<CityWeatherResponse | undefined>(undefined);
     readonly error = signal<string | undefined>(undefined);
 
-    async onSearch(query: string): Promise<void> {
+    async onSearch(searchParams: { cityName: string, country: string }): Promise<void> {
         try {
             this.error.set(undefined);
-            const data = await searchCityWeather(query);
+            const data = await searchCityWeather(searchParams.cityName, searchParams.country);
             this.cityWeather.set(data);
         } catch (error) {
             this.cityWeather.set(undefined);

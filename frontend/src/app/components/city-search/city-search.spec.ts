@@ -26,6 +26,10 @@ describe('CitySearch', () => {
     expect(component['searchControl'].value).toBe('');
   });
 
+  it('should initialize country control with GB', () => {
+    expect(component['countryControl'].value).toBe('GB');
+  });
+
   it('should update searchControl when input value changes', (done) => {
     const input = fixture.nativeElement.querySelector('input');
     input.value = 'London';
@@ -57,7 +61,7 @@ describe('CitySearch', () => {
           // After 300ms of no changes, should trigger search
           setTimeout(() => {
             expect(onSearchSpy).toHaveBeenCalledTimes(1);
-            expect(onSearchSpy).toHaveBeenCalledWith('Lond');
+            expect(onSearchSpy).toHaveBeenCalledWith({ cityName: 'Lond', country: 'GB' });
             done();
           }, 350); // Wait for debounce
         }, 100);
@@ -65,14 +69,15 @@ describe('CitySearch', () => {
     }, 100);
   });
 
-  it('should emit onSearch when query has content', (done) => {
+  it('should emit onSearch with cityName and country when query has content', (done) => {
     const onSearchSpy = spyOn(component.onSearch, 'emit');
 
+    component['countryControl'].setValue('FR');
     component['searchControl'].setValue('Paris');
     
     setTimeout(() => {
       fixture.detectChanges();
-      expect(onSearchSpy).toHaveBeenCalledWith('Paris');
+      expect(onSearchSpy).toHaveBeenCalledWith({ cityName: 'Paris', country: 'FR' });
       done();
     }, 350);
   });
@@ -114,13 +119,15 @@ describe('CitySearch', () => {
     }, 350);
   });
 
-  it('should clear search control and emit onClearSearch when onClear is called', () => {
+  it('should clear search control, reset country, and emit onClearSearch when onClear is called', () => {
     const onClearSearchSpy = spyOn(component.onClearSearch, 'emit');
     component['searchControl'].setValue('Tokyo');
+    component['countryControl'].setValue('DE');
 
     component.onClear();
 
     expect(component['searchControl'].value).toBe('');
+    expect(component['countryControl'].value).toBe('GB');
     expect(onClearSearchSpy).toHaveBeenCalled();
   });
 
@@ -160,5 +167,33 @@ describe('CitySearch', () => {
     const input = fixture.nativeElement.querySelector('input');
     expect(input).toBeTruthy();
     expect(input?.getAttribute('type')).toBe('text');
+  });
+
+  it('should render country select dropdown', () => {
+    const select = fixture.nativeElement.querySelector('mat-select');
+    expect(select).toBeTruthy();
+  });
+
+  it('should emit search with new country when country changes and city has value', (done) => {
+    const onSearchSpy = spyOn(component.onSearch, 'emit');
+    component['searchControl'].setValue('Berlin');
+
+    // Wait for debounce, then change country
+    setTimeout(() => {
+      onSearchSpy.calls.reset();
+      component['countryControl'].setValue('DE');
+
+      expect(onSearchSpy).toHaveBeenCalledWith({ cityName: 'Berlin', country: 'DE' });
+      done();
+    }, 350);
+  });
+
+  it('should not emit search when country changes but city is empty', () => {
+    const onSearchSpy = spyOn(component.onSearch, 'emit');
+    component['searchControl'].setValue('');
+
+    component['countryControl'].setValue('DE');
+
+    expect(onSearchSpy).not.toHaveBeenCalled();
   });
 });
