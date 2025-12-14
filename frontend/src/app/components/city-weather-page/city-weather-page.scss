@@ -85,6 +85,11 @@
       color: var(--mat-sys-on-surface);
     }
   }
+
+  .loading-container {
+    min-height: 200px;
+    align-items: center;
+  }
   
   .no-data {
     color: var(--mat-sys-on-surface-variant);

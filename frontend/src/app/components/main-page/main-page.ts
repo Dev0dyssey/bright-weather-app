@@ -14,20 +14,25 @@ export class MainPage {
     private readonly weatherService = inject(WeatherService);
     readonly cityWeather = signal<CityWeatherResponse | undefined>(undefined);
     readonly error = signal<string | undefined>(undefined);
+    readonly isLoading = signal<boolean>(false);
 
     async onSearch(searchParams: { cityName: string, country: string }): Promise<void> {
         try {
+            this.isLoading.set(true);
             this.error.set(undefined);
             const data = await this.weatherService.searchCityWeather(searchParams.cityName, searchParams.country);
             this.cityWeather.set(data);
         } catch (error) {
             this.cityWeather.set(undefined);
             this.error.set(error instanceof Error ? error.message : 'An error has occurred');
+        } finally {
+            this.isLoading.set(false);
         }
     }
 
     onClearSearch(): void {
         this.cityWeather.set(undefined);
         this.error.set(undefined);
+        this.isLoading.set(false);
     }
 }
