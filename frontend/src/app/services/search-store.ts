@@ -1,25 +1,29 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { HttpClient, HttpParams, HttpErrorResponse } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 import { CityWeatherResponse } from '../models/city-weather-interface';
 
 @Injectable({
     providedIn: 'root'
 })
 export class WeatherService {
+    private readonly http = inject(HttpClient);
     private readonly baseUrl = 'http://localhost:3000';
 
     async searchCityWeather(cityName: string, country?: string): Promise<CityWeatherResponse> {
-        const params = new URLSearchParams({ cityName });
+        let params = new HttpParams().set('cityName', cityName);
         if (country) {
-            params.append('country', country);
+            params = params.set('country', country);
         }
-    
-        const response = await fetch(`${this.baseUrl}/search?${params.toString()}`);
-        const data = await response.json();
-        
-        if (!response.ok) {
-            throw new Error(data.message || 'An error occurred while fetching weather data');
+
+        try {
+            return await firstValueFrom(this.http.get<CityWeatherResponse>(`${this.baseUrl}/search`, { params }));
         }
-        
-        return data;
+        catch (error) {
+            if (error instanceof HttpErrorResponse) {
+                throw new Error(error.error?.message || 'An error occurred while fetching weather data');
+            }
+            throw error;
+        }
     }
 }
