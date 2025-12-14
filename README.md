@@ -54,8 +54,7 @@ npm install
 Create a `.env` file in the `backend` directory:
 
 ```env
-OPENWEATHER_API_KEY=your_api_key_here
-Can use the key: 3527c33dd4c42b70091fb374279005bb
+OPENWEATHER_API_KEY=your_api_key_here (Can use the key: 3527c33dd4c42b70091fb374279005bb)
 PORT=3000
 ```
 
