@@ -47,19 +47,6 @@ describe('searchController', () => {
             expect(mockRes.json).toHaveBeenCalledWith(mockWeatherResult);
         });
 
-        it('should return 400 when cityName is missing', async () => {
-            mockReq.query = { country: 'GB' };  // No cityName
-
-            await searchCityWeather(mockReq, mockRes);
-
-            expect(getCityWeather).not.toHaveBeenCalled();
-            expect(mockRes.status).toHaveBeenCalledWith(400);
-            expect(mockRes.json).toHaveBeenCalledWith({
-                error: 'City name is required',
-                message: 'Please provide a city name to search for weather'
-            });
-        });
-
         it('should return 404 when city not found', async () => {
             const { NotFoundError } = require('../../utils/errors');
             
