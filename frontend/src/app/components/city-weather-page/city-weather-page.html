@@ -1,18 +1,68 @@
 <div class="city-weather-page">
-    <h1>City Weather for {{ cityWeather()?.cityName ?? 'Default City Name' }}</h1>
+    <h1 class="city-title">{{ cityWeather()?.cityName ?? 'Search for a city' }}</h1>
+    
     @if (error()) {
-        <p class="error">{{ error() }}</p>
+      <div class="error-card d-flex flex-column align-items-center gap-2 p-4">
+        <i class="bi bi-exclamation-circle error-icon"></i>
+        <p class="mb-0">{{ error() }}</p>
+      </div>
     } @else if (cityWeather()) {
-        <h2>Weather details</h2>
-        <p>Current weather: {{ cityWeather()?.locationWeather?.condition }} - {{ cityWeather()?.locationWeather?.description }}</p>
-        <p>Temperature: {{ cityWeather()?.locationWeather?.temp }}°C</p>
-        <p>Feels like: {{ cityWeather()?.locationWeather?.feelsLike }}°C</p>
-        <p>Humidity: {{ cityWeather()?.locationWeather?.humidity }}%</p>
-        <p>Min temperature: {{ cityWeather()?.locationWeather?.tempMin }}°C</p>
-        <p>Max temperature: {{ cityWeather()?.locationWeather?.tempMax }}°C</p>
-        <p>Wind speed: {{ cityWeather()?.locationWeather?.windSpeedMph }} mph</p>
-        <p>Rain volume last hour: {{ cityWeather()?.locationWeather?.rainVolumeLastHour ?? 'N/A' }} mm</p>
+      <div class="weather-card p-4">
+        <div class="weather-condition text-center mb-3">
+          <span class="condition-main d-block">{{ cityWeather()?.locationWeather?.condition }}</span>
+          <span class="condition-desc">{{ cityWeather()?.locationWeather?.description }}</span>
+        </div>
+        
+        <div class="temperature-main text-center mb-4">
+          {{ cityWeather()?.locationWeather?.temp }}°C
+        </div>
+        
+        <div class="row g-2 g-md-3">
+          <div class="col-6 col-md-4">
+            <div class="detail-item text-center p-2 p-md-3">
+              <i class="bi bi-thermometer-half detail-icon"></i>
+              <span class="detail-label d-block">Feels like</span>
+              <span class="detail-value">{{ cityWeather()?.locationWeather?.feelsLike }}°C</span>
+            </div>
+          </div>
+          <div class="col-6 col-md-4">
+            <div class="detail-item text-center p-2 p-md-3">
+              <i class="bi bi-droplet detail-icon"></i>
+              <span class="detail-label d-block">Humidity</span>
+              <span class="detail-value">{{ cityWeather()?.locationWeather?.humidity }}%</span>
+            </div>
+          </div>
+          <div class="col-6 col-md-4">
+            <div class="detail-item text-center p-2 p-md-3">
+              <i class="bi bi-thermometer-low detail-icon icon-cold"></i>
+              <span class="detail-label d-block">Min</span>
+              <span class="detail-value">{{ cityWeather()?.locationWeather?.tempMin }}°C</span>
+            </div>
+          </div>
+          <div class="col-6 col-md-4">
+            <div class="detail-item text-center p-2 p-md-3">
+              <i class="bi bi-thermometer-high detail-icon icon-hot"></i>
+              <span class="detail-label d-block">Max</span>
+              <span class="detail-value">{{ cityWeather()?.locationWeather?.tempMax }}°C</span>
+            </div>
+          </div>
+          <div class="col-6 col-md-4">
+            <div class="detail-item text-center p-2 p-md-3">
+              <i class="bi bi-wind detail-icon icon-wind"></i>
+              <span class="detail-label d-block">Wind</span>
+              <span class="detail-value">{{ cityWeather()?.locationWeather?.windSpeedMph }} mph</span>
+            </div>
+          </div>
+          <div class="col-6 col-md-4">
+            <div class="detail-item text-center p-2 p-md-3">
+              <i class="bi bi-cloud-rain detail-icon"></i>
+              <span class="detail-label d-block">Rain (1h)</span>
+              <span class="detail-value">{{ cityWeather()?.locationWeather?.rainVolumeLastHour ?? 'N/A' }} mm</span>
+            </div>
+          </div>
+        </div>
+      </div>
     } @else {
-        <p>No weather data available</p>
+      <p class="no-data text-center">Enter a city name to see weather details</p>
     }
-</div>
+  </div>
