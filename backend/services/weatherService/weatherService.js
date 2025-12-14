@@ -1,49 +1,50 @@
 const API_KEY = process.env.OPENWEATHER_API_KEY;
-const GEO_BASE_URL = 'http://api.openweathermap.org/geo/1.0/direct';
+const GEO_BASE_URL = 'https://api.openweathermap.org/geo/1.0/direct';
 const WEATHER_BASE_URL = 'https://api.openweathermap.org/data/2.5/weather';
-const msToMph = (ms) => Math.round(ms * 2.23694 * 10) / 10;
+const MS_TO_MPH_CONVERSION = 2.23694;
+
+const msToMph = (ms) => Math.round(ms * MS_TO_MPH_CONVERSION * 10) / 10;
+
+const validateApiKey = () => {
+    if (!API_KEY) {
+        throw new Error('OpenWeather API key is not set');
+    }
+}
 
 const getCoordinates = async (cityName, country = 'GB') => {
-    const url = `${GEO_BASE_URL}?q=${cityName},${country}&limit=1&appid=${API_KEY}`;
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error('Weather service unavailable, please try again later');
-        }
-        const data = await response.json();
-        console.log('Data:', data);
-        if (!data || data.length === 0) {
-            throw new Error(`We could not find ${cityName} in ${country}. Please check the city name or try a different city`);
-        }
-        const { lat, lon } = data[0];
-        console.log(`Coordinates found for ${cityName} in ${country}: ${lat}, ${lon}`);
-        return { lat, lon };
-    } catch (error) {
-        console.error('Error getting coordinates:', error);
-        throw error;
+    validateApiKey();
+
+    if (!cityName?.trim()) {
+        throw new Error('City name is required and cannot be empty');
     }
+
+    const url = `${GEO_BASE_URL}?q=${encodeURIComponent(cityName)},${country}&limit=1&appid=${API_KEY}`;
+
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error('Weather service unavailable, please try again later');
+    }
+    const data = await response.json();
+    if (!data || data.length === 0) {
+        throw new Error(`We could not find ${cityName} in ${country}. Please check the city name or try a different city`);
+    }
+    const { lat, lon } = data[0];
+    return { lat, lon };
 };
 
 const getWeatherForLocation = async (lat, lon) => {
+    validateApiKey();
     const url = `${WEATHER_BASE_URL}?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`;
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            const errorBody = await response.text();
-            console.error('Weather API status:', response.status);
-            console.error('Weather API error:', errorBody);
-            throw new Error('Weather service unavailable, please try again later');
-        }
-        const data = await response.json();
-        console.log('Weather data:', data);
-        if (!data || !data.main) {
-            throw new Error('Weather data is currently unavailable for this location. Please try again later');
-        }
-        return data;
-    } catch (error) {
-        console.error('Error getting weather for location:', error);
-        throw error;
+
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error('Weather service unavailable, please try again later');
     }
+    const data = await response.json();
+    if (!data || !data.main) {
+        throw new Error('Weather data is currently unavailable for this location. Please try again later');
+    }
+    return data;
 };
 
 const getCityWeather = async (cityName, country = 'GB') => {

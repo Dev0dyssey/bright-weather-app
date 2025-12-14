@@ -13,6 +13,7 @@ const searchCityWeather = async(req, res) => {
         const weatherResult = await getCityWeather(cityName, country);
         res.json(weatherResult);
     } catch (error) {
+        console.error('Error searching for city weather:', error);
         res.status(500).json({
             error: 'Internal server error',
             message: error.message
