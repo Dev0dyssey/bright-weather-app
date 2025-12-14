@@ -2,8 +2,6 @@
 
 A weather application that displays current weather information for cities worldwide using the OpenWeatherMap API.
 
-![Bright Weather App Screenshot](./screenshot.png)
-
 ## Features
 
 - Search for weather by city name
