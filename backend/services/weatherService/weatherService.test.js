@@ -1,5 +1,6 @@
 process.env.OPENWEATHER_API_KEY = 'test-api-key';
 
+const { NotFoundError, ServiceUnavailableError } = require('../../utils/errors');
 const { getCityWeather, _internal } = require('./weatherService');
 const { getWeatherForLocation, getCoordinates } = _internal;
 
@@ -34,7 +35,7 @@ describe('weatherService', () => {
 
             await expect(getCoordinates('MockCity', 'GB'))
                 .rejects
-                .toThrow('We could not find MockCity in GB');
+                .toThrow(NotFoundError);
         });
 
         it('should throw error when API fails', async () => {
@@ -45,7 +46,7 @@ describe('weatherService', () => {
 
             await expect(getCoordinates('London', 'GB'))
                 .rejects
-                .toThrow('Weather service unavailable');
+                .toThrow(ServiceUnavailableError);
         });
 
         it('should default to GB when no country provided', async () => {
@@ -95,7 +96,7 @@ describe('weatherService', () => {
 
             await expect(getWeatherForLocation(51.5074, -0.1278))
                 .rejects
-                .toThrow('Weather service unavailable');
+                .toThrow(ServiceUnavailableError);
         });
 
         it('should throw error when response has no main data', async () => {
@@ -106,7 +107,7 @@ describe('weatherService', () => {
 
             await expect(getWeatherForLocation(51.5074, -0.1278))
                 .rejects
-                .toThrow('Weather data is currently unavailable');
+                .toThrow(ServiceUnavailableError);
         });
     });
 
@@ -191,7 +192,7 @@ describe('weatherService', () => {
 
             await expect(getCityWeather('MockCity', 'GB'))
                 .rejects
-                .toThrow('We could not find MockCity in GB');
+                .toThrow(NotFoundError);
         });
 
         it('should fail if getWeatherForLocation fails', async () => {
@@ -210,7 +211,7 @@ describe('weatherService', () => {
 
             await expect(getCityWeather('London', 'GB'))
                 .rejects
-                .toThrow('Weather service unavailable');
+                .toThrow(ServiceUnavailableError);
         });
     });
 });
