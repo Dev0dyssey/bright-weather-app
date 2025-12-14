@@ -12,7 +12,11 @@ app.use(express.json());
 app.use('/search', searchRoutes);
 
 app.get('/', (req, res) => {
-    res.send('Hello World');
+    res.json({
+        name: 'Bright Weather API',
+        version: '1.0.0',
+        status: 'ok'
+    });
 });
 
 app.listen(PORT, () => {
