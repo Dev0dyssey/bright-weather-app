@@ -1,19 +1,16 @@
 const API_KEY = process.env.OPENWEATHER_API_KEY;
+if (!API_KEY) {
+    throw new Error('OpenWeather API key is not set');
+}
 const GEO_BASE_URL = 'https://api.openweathermap.org/geo/1.0/direct';
 const WEATHER_BASE_URL = 'https://api.openweathermap.org/data/2.5/weather';
 const MS_TO_MPH_CONVERSION = 2.23694;
 
+
+
 const msToMph = (ms) => Math.round(ms * MS_TO_MPH_CONVERSION * 10) / 10;
 
-const validateApiKey = () => {
-    if (!API_KEY) {
-        throw new Error('OpenWeather API key is not set');
-    }
-}
-
 const getCoordinates = async (cityName, country = 'GB') => {
-    validateApiKey();
-
     if (!cityName?.trim()) {
         throw new Error('City name is required and cannot be empty');
     }
@@ -33,7 +30,6 @@ const getCoordinates = async (cityName, country = 'GB') => {
 };
 
 const getWeatherForLocation = async (lat, lon) => {
-    validateApiKey();
     const url = `${WEATHER_BASE_URL}?lat=${lat}&lon=${lon}&units=metric&appid=${API_KEY}`;
 
     const response = await fetch(url);
