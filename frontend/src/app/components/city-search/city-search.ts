@@ -29,8 +29,8 @@ export class CitySearch {
     ]
     protected readonly searchControl = new FormControl('');
     protected readonly countryControl = new FormControl('GB');
-    onSearch = output<{ cityName: string, country: string }>();
-    onClearSearch = output<void>();
+    readonly onSearch = output<{ cityName: string, country: string }>();
+    readonly onClearSearch = output<void>();
 
     constructor() {
         this.searchControl.valueChanges.pipe(

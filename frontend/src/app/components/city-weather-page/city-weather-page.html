@@ -6,15 +6,15 @@
         <i class="bi bi-exclamation-circle error-icon"></i>
         <p class="mb-0">{{ error() }}</p>
       </div>
-    } @else if (cityWeather()) {
+    } @else if (weather()) {
       <div class="weather-card p-4">
         <div class="weather-condition text-center mb-3">
-          <span class="condition-main d-block">{{ cityWeather()?.locationWeather?.condition }}</span>
-          <span class="condition-desc">{{ cityWeather()?.locationWeather?.description }}</span>
+          <span class="condition-main d-block">{{ weather()?.condition }}</span>
+          <span class="condition-desc">{{ weather()?.description }}</span>
         </div>
         
         <div class="temperature-main text-center mb-4">
-          {{ cityWeather()?.locationWeather?.temp }}°C
+          {{ weather()?.temp }}°C
         </div>
         
         <div class="row g-2 g-md-3">
@@ -22,42 +22,42 @@
             <div class="detail-item text-center p-2 p-md-3">
               <i class="bi bi-thermometer-half detail-icon"></i>
               <span class="detail-label d-block">Feels like</span>
-              <span class="detail-value">{{ cityWeather()?.locationWeather?.feelsLike }}°C</span>
+              <span class="detail-value">{{ weather()?.feelsLike }}°C</span>
             </div>
           </div>
           <div class="col-6 col-md-4">
             <div class="detail-item text-center p-2 p-md-3">
               <i class="bi bi-droplet detail-icon"></i>
               <span class="detail-label d-block">Humidity</span>
-              <span class="detail-value">{{ cityWeather()?.locationWeather?.humidity }}%</span>
+              <span class="detail-value">{{ weather()?.humidity }}%</span>
             </div>
           </div>
           <div class="col-6 col-md-4">
             <div class="detail-item text-center p-2 p-md-3">
               <i class="bi bi-thermometer-low detail-icon icon-cold"></i>
               <span class="detail-label d-block">Min</span>
-              <span class="detail-value">{{ cityWeather()?.locationWeather?.tempMin }}°C</span>
+              <span class="detail-value">{{ weather()?.tempMin }}°C</span>
             </div>
           </div>
           <div class="col-6 col-md-4">
             <div class="detail-item text-center p-2 p-md-3">
               <i class="bi bi-thermometer-high detail-icon icon-hot"></i>
               <span class="detail-label d-block">Max</span>
-              <span class="detail-value">{{ cityWeather()?.locationWeather?.tempMax }}°C</span>
+              <span class="detail-value">{{ weather()?.tempMax }}°C</span>
             </div>
           </div>
           <div class="col-6 col-md-4">
             <div class="detail-item text-center p-2 p-md-3">
               <i class="bi bi-wind detail-icon icon-wind"></i>
               <span class="detail-label d-block">Wind</span>
-              <span class="detail-value">{{ cityWeather()?.locationWeather?.windSpeedMph }} mph</span>
+              <span class="detail-value">{{ weather()?.windSpeedMph }} mph</span>
             </div>
           </div>
           <div class="col-6 col-md-4">
             <div class="detail-item text-center p-2 p-md-3">
               <i class="bi bi-cloud-rain detail-icon"></i>
               <span class="detail-label d-block">Rain (1h)</span>
-              <span class="detail-value">{{ cityWeather()?.locationWeather?.rainVolumeLastHour ?? 'N/A' }} mm</span>
+              <span class="detail-value">{{ weather()?.rainVolumeLastHour ?? 'N/A' }} mm</span>
             </div>
           </div>
         </div>

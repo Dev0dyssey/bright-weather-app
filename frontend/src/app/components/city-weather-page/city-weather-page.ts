@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { CityWeatherResponse } from '../../models/city-weather-interface';
 
 @Component({
@@ -9,4 +9,6 @@ import { CityWeatherResponse } from '../../models/city-weather-interface';
 export class CityWeatherPage {
     readonly cityWeather = input<CityWeatherResponse>();
     readonly error = input<string>();
+
+    readonly weather = computed(() => this.cityWeather()?.locationWeather);
 }
