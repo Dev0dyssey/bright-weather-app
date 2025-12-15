@@ -33,7 +33,7 @@ A weather application that displays current weather information for cities world
 
 - Node.js (v18 or higher)
 - npm
-- OpenWeatherMap API key (free tier) — [Get one here](https://openweathermap.org/api)
+- OpenWeatherMap API key
 
 ## Setup Instructions
 
