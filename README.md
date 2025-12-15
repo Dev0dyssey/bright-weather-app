@@ -1,6 +1,6 @@
 # Bright Weather App
 
-A weather application that displays current weather information for cities worldwide using the OpenWeatherMap API.
+A weather application that displays current weather information for cities internationally using the OpenWeatherMap API.
 
 ## Features
 
@@ -20,7 +20,7 @@ A weather application that displays current weather information for cities world
 ### Frontend
 - Angular 20
 - Angular Material
-- Bootstrap 5 (utilities and grid)
+- Bootstrap 5
 - Bootstrap Icons
 - TypeScript
 
