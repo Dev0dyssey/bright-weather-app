@@ -193,6 +193,7 @@ Some ideas for future improvements to the code, especially if this were to be ta
 | **ESLint configuration** | Add linting rules to enforce consistent code style across the codebase |
 | **Pre-commit hooks** | Use Husky + lint-staged to run linting and tests before commits |
 | **Shared constants** | Extract hardcoded values (countries list, debounce time, etc.) into shared constant files |
+| **Complete Country list** | Add rest of countries into a shareable constant file |
 
 ### Testing & Monitoring
 
