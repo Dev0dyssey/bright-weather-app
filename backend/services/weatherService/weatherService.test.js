@@ -1,8 +1,7 @@
 process.env.OPENWEATHER_API_KEY = 'test-api-key';
 
-const { NotFoundError, ServiceUnavailableError } = require('../../utils/errors');
-const { getCityWeather, _internal } = require('./weatherService');
-const { getWeatherForLocation, getCoordinates } = _internal;
+const { NotFoundError, ServiceUnavailableError, ValidationError } = require('../../utils/errors');
+const { getCityWeather } = require('./weatherService');
 
 global.fetch = jest.fn();
 
@@ -11,115 +10,13 @@ describe('weatherService', () => {
         fetch.mockClear();
     });
 
-    describe('getCoordinates', () => {
-        it('should return lat/lon for a valid city', async () => {
-            fetch.mockResolvedValueOnce({
-                ok: true,
-                json: async () => [{ lat: 51.5074, lon: -0.1278 }]
-            });
-
-            const result = await getCoordinates('London', 'GB');
-
-            expect(result).toEqual({ lat: 51.5074, lon: -0.1278 });
-            expect(fetch).toHaveBeenCalledTimes(1);
-            expect(fetch).toHaveBeenCalledWith(
-                expect.stringContaining('q=London,GB')
-            );
-        });
-
-        it('should throw error when city not found', async () => {
-            fetch.mockResolvedValueOnce({
-                ok: true,
-                json: async () => []
-            });
-
-            await expect(getCoordinates('MockCity', 'GB'))
-                .rejects
-                .toThrow(NotFoundError);
-        });
-
-        it('should throw error when API fails', async () => {
-            fetch.mockResolvedValueOnce({
-                ok: false,
-                status: 500
-            });
-
-            await expect(getCoordinates('London', 'GB'))
-                .rejects
-                .toThrow(ServiceUnavailableError);
-        });
-
-        it('should default to GB when no country provided', async () => {
-            fetch.mockResolvedValueOnce({
-                ok: true,
-                json: async () => [{ lat: 51.5074, lon: -0.1278 }]
-            });
-
-            await getCoordinates('London');
-
-            expect(fetch).toHaveBeenCalledWith(
-                expect.stringContaining('q=London,GB')
-            );
-        });
-    });
-
-    describe('getWeatherForLocation', () => {
-        it('should return weather data for valid coordinates', async () => {
-            const mockWeatherData = {
-                main: { temp: 15.5, feels_like: 14.2, humidity: 72 },
-                wind: { speed: 3.5 },
-                weather: [{ main: 'Clouds', description: 'overcast clouds' }]
-            };
-
-            fetch.mockResolvedValueOnce({
-                ok: true,
-                json: async () => mockWeatherData
-            });
-
-            const result = await getWeatherForLocation(51.5074, -0.1278);
-
-            expect(result).toEqual(mockWeatherData);
-            expect(fetch).toHaveBeenCalledWith(
-                expect.stringContaining('lat=51.5074')
-            );
-            expect(fetch).toHaveBeenCalledWith(
-                expect.stringContaining('lon=-0.1278')
-            );
-        });
-
-        it('should throw error when API fails', async () => {
-            fetch.mockResolvedValueOnce({
-                ok: false,
-                status: 500,
-                text: async () => 'Server error'
-            });
-
-            await expect(getWeatherForLocation(51.5074, -0.1278))
-                .rejects
-                .toThrow(ServiceUnavailableError);
-        });
-
-        it('should throw error when response has no main data', async () => {
-            fetch.mockResolvedValueOnce({
-                ok: true,
-                json: async () => ({})
-            });
-
-            await expect(getWeatherForLocation(51.5074, -0.1278))
-                .rejects
-                .toThrow(ServiceUnavailableError);
-        });
-    });
-
     describe('getCityWeather', () => {
-        it('should return transformed weather data', async () => {
-            // First call - getCoordinates
+        it('should return transformed weather data for valid city', async () => {
             fetch.mockResolvedValueOnce({
                 ok: true,
                 json: async () => [{ lat: 51.5074, lon: -0.1278 }]
             });
 
-            // Second call - getWeatherForLocation (raw API response)
             fetch.mockResolvedValueOnce({
                 ok: true,
                 json: async () => ({
@@ -130,7 +27,7 @@ describe('weatherService', () => {
                         temp_min: 13.0,
                         temp_max: 17.0
                     },
-                    wind: { speed: 4.0 },  // 4.0 m/s = 8.9 mph
+                    wind: { speed: 4.0 },
                     rain: { '1h': 0.5 },
                     weather: [{ main: 'Clouds', description: 'overcast clouds' }]
                 })
@@ -156,6 +53,61 @@ describe('weatherService', () => {
             expect(fetch).toHaveBeenCalledTimes(2);
         });
 
+        it('should call geo API with correct city and country', async () => {
+            fetch.mockResolvedValueOnce({
+                ok: true,
+                json: async () => [{ lat: 51.5074, lon: -0.1278 }]
+            });
+
+            fetch.mockResolvedValueOnce({
+                ok: true,
+                json: async () => ({
+                    main: { temp: 15, feels_like: 14, humidity: 70, temp_min: 13, temp_max: 17 }
+                })
+            });
+
+            await getCityWeather('Paris', 'FR');
+
+            expect(fetch).toHaveBeenNthCalledWith(1, expect.stringContaining('q=Paris,FR'));
+        });
+
+        it('should call weather API with coordinates from geo API', async () => {
+            fetch.mockResolvedValueOnce({
+                ok: true,
+                json: async () => [{ lat: 48.8566, lon: 2.3522 }]
+            });
+
+            fetch.mockResolvedValueOnce({
+                ok: true,
+                json: async () => ({
+                    main: { temp: 15, feels_like: 14, humidity: 70, temp_min: 13, temp_max: 17 }
+                })
+            });
+
+            await getCityWeather('Paris', 'FR');
+
+            expect(fetch).toHaveBeenNthCalledWith(2, expect.stringContaining('lat=48.8566'));
+            expect(fetch).toHaveBeenNthCalledWith(2, expect.stringContaining('lon=2.3522'));
+        });
+
+        it('should default country to GB when not provided', async () => {
+            fetch.mockResolvedValueOnce({
+                ok: true,
+                json: async () => [{ lat: 51.5074, lon: -0.1278 }]
+            });
+
+            fetch.mockResolvedValueOnce({
+                ok: true,
+                json: async () => ({
+                    main: { temp: 15, feels_like: 14, humidity: 70, temp_min: 13, temp_max: 17 }
+                })
+            });
+
+            await getCityWeather('London');
+
+            expect(fetch).toHaveBeenNthCalledWith(1, expect.stringContaining('q=London,GB'));
+        });
+
         it('should handle missing optional data (wind, rain, weather)', async () => {
             fetch.mockResolvedValueOnce({
                 ok: true,
@@ -165,14 +117,7 @@ describe('weatherService', () => {
             fetch.mockResolvedValueOnce({
                 ok: true,
                 json: async () => ({
-                    main: {
-                        temp: 15.5,
-                        feels_like: 14.2,
-                        humidity: 72,
-                        temp_min: 13.0,
-                        temp_max: 17.0
-                    }
-                    // No wind, rain, or weather property
+                    main: { temp: 15.5, feels_like: 14.2, humidity: 72, temp_min: 13.0, temp_max: 17.0 }
                 })
             });
 
@@ -184,34 +129,70 @@ describe('weatherService', () => {
             expect(result.locationWeather.description).toBeNull();
         });
 
-        it('should fail if getCoordinates fails', async () => {
+        it('should throw NotFoundError when city not found', async () => {
             fetch.mockResolvedValueOnce({
                 ok: true,
-                json: async () => []  // No results
+                json: async () => []
             });
 
-            await expect(getCityWeather('MockCity', 'GB'))
+            await expect(getCityWeather('InvalidCity', 'GB'))
                 .rejects
                 .toThrow(NotFoundError);
         });
 
-        it('should fail if getWeatherForLocation fails', async () => {
-            // Coordinates succeed
-            fetch.mockResolvedValueOnce({
-                ok: true,
-                json: async () => [{ lat: 51.5074, lon: -0.1278 }]
-            });
-
-            // Weather fails
+        it('should throw ServiceUnavailableError when geo API fails', async () => {
             fetch.mockResolvedValueOnce({
                 ok: false,
-                status: 500,
-                text: async () => 'Server error'
+                status: 500
             });
 
             await expect(getCityWeather('London', 'GB'))
                 .rejects
                 .toThrow(ServiceUnavailableError);
+        });
+
+        it('should throw ServiceUnavailableError when weather API fails', async () => {
+            fetch.mockResolvedValueOnce({
+                ok: true,
+                json: async () => [{ lat: 51.5074, lon: -0.1278 }]
+            });
+
+            fetch.mockResolvedValueOnce({
+                ok: false,
+                status: 500
+            });
+
+            await expect(getCityWeather('London', 'GB'))
+                .rejects
+                .toThrow(ServiceUnavailableError);
+        });
+
+        it('should throw ServiceUnavailableError when weather data is malformed', async () => {
+            fetch.mockResolvedValueOnce({
+                ok: true,
+                json: async () => [{ lat: 51.5074, lon: -0.1278 }]
+            });
+
+            fetch.mockResolvedValueOnce({
+                ok: true,
+                json: async () => ({})
+            });
+
+            await expect(getCityWeather('London', 'GB'))
+                .rejects
+                .toThrow(ServiceUnavailableError);
+        });
+
+        it('should throw ValidationError when city name is empty', async () => {
+            await expect(getCityWeather('', 'GB'))
+                .rejects
+                .toThrow(ValidationError);
+        });
+
+        it('should throw ValidationError when city name is whitespace', async () => {
+            await expect(getCityWeather('   ', 'GB'))
+                .rejects
+                .toThrow(ValidationError);
         });
     });
 });

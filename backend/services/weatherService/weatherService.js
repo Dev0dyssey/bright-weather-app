@@ -73,10 +73,4 @@ const getCityWeather = async (cityName, country = 'GB') => {
     };
 };
 
-module.exports = {
-    getCityWeather,
-    _internal: {
-        getCoordinates,
-        getWeatherForLocation,
-    }
-};
+module.exports = { getCityWeather };
