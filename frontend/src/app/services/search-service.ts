@@ -8,7 +8,7 @@ import { CityWeatherResponse } from '../models/city-weather-interface';
 })
 export class SearchService {
     private readonly http = inject(HttpClient);
-    private readonly baseUrl = 'http://localhost:3000';
+    private readonly baseUrl = 'http://localhost:3000/api/v1';
 
     async searchCityWeather(cityName: string, country?: string): Promise<CityWeatherResponse> {
         let params = new HttpParams().set('cityName', cityName);

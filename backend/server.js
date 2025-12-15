@@ -9,7 +9,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use('/search', searchRoutes);
+app.use('/api/v1/search', searchRoutes);
 
 app.get('/', (req, res) => {
     res.json({

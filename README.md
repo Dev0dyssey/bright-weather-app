@@ -105,7 +105,7 @@ npm test
 
 ## API Endpoints
 
-### GET /search
+### GET /api/v1/search
 
 Search for weather data by city name.
 
@@ -117,7 +117,7 @@ Search for weather data by city name.
 
 **Example:**
 ```
-GET /search?cityName=London&country=GB
+GET /api/v1/search?cityName=London&country=GB
 ```
 
 **Response:**
@@ -175,9 +175,7 @@ Some ideas for future improvements to the code, especially if this were to be ta
 | Improvement | Description |
 |-------------|-------------|
 | **Environment configuration** | Use Angular environment files to manage API URLs across development, staging, and production environments |
-| **API versioning** | Prefix routes with `/api/v1/` to support future breaking changes without disrupting existing clients |
 | **Centralised error middleware** | Replace per-controller `try/catch` blocks with Express error-handling middleware for consistency |
-| **Server module export** | Export the Express app for integration testing without starting the server |
 
 ### Security & Reliability
 
